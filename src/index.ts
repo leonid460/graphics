@@ -1,23 +1,21 @@
 import { globalState } from './globalState';
-import { Dot } from './Dot';
+import { drawLine } from './drawLine';
 import './index.css';
+import { T2DPoint } from './types';
+import { multiplyMatrix, transformRowToColumn, transformColumnToRow } from './matrixUtils';
 
 function setUpCanvas(inputPerspective: number){
   const canvas = document.getElementById('scene') as HTMLCanvasElement;
 
-  let width = canvas.offsetWidth; // Width of the scene
-  let height = canvas.offsetHeight; // Height of the scene
+  let width = canvas.offsetWidth;
+  let height = canvas.offsetHeight;
 
   const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
   function onResize () {
-    // We need to define the dimensions of the canvas to our canvas element
-    // Javascript doesn't know the computed dimensions from CSS so we need to do it manually
     width = canvas.offsetWidth;
     height = canvas.offsetHeight;
 
-    // If the screen device has a pixel ratio over 1
-    // We render the canvas twice bigger to make it sharper (e.g. Retina iPhone)
     if (window.devicePixelRatio > 1) {
       canvas.width = canvas.clientWidth * 2;
       canvas.height = canvas.clientHeight * 2;
@@ -29,7 +27,6 @@ function setUpCanvas(inputPerspective: number){
   }
 
   window.addEventListener('resize', onResize);
-  // Make sure the canvas size is perfect
   onResize();
 
   globalState.canvas = canvas;
@@ -41,27 +38,39 @@ function setUpCanvas(inputPerspective: number){
   globalState.projectionCenterY = height / 2;
 }
 
-function renderDots(dots: Dot[]) {
-  if (!globalState.context) {
-    throw new Error('No canvas context in global state');
-  }
-
-  globalState.context.clearRect(0, 0, globalState.width, globalState.height);
-
-  for (let i = 0; i < dots.length; i++) {
-    dots[i].draw();
-  }
-
-  window.requestAnimationFrame(() => renderDots(dots));
+function render() {
+  window.requestAnimationFrame(() => render());
 }
 
 void function main() {
   setUpCanvas(0.8);
-  const dots: Dot[] = [];
 
-  for (let i = 0; i < 800; i++) {
-    dots.push(new Dot());
-  }
+  const drawLineByPoints = (first: T2DPoint, second: T2DPoint, color?: string) =>
+    drawLine(first[0], first[1], second[0], second[1], color);
 
-  renderDots(dots);
+  const a: T2DPoint = [100, 100, 1, 1];
+  const b: T2DPoint = [100, 500, 1, 1];
+  const c: T2DPoint = [500, 0, 1, 1];
+
+  const projectionMatrix = [
+    [1, 0, 0, 100],
+    [0, 1, 0, 100],
+    [0, 0, 1, 0],
+    [0 ,0 ,0, 1]
+  ];
+
+  const projectionA = multiplyMatrix(projectionMatrix, transformRowToColumn(a));
+  const projectionB = multiplyMatrix(projectionMatrix, transformRowToColumn(b));
+  const projectionC = multiplyMatrix(projectionMatrix, transformRowToColumn(c));
+
+  const newA: T2DPoint = transformColumnToRow(projectionA) as T2DPoint;
+  const newB: T2DPoint = transformColumnToRow(projectionB) as T2DPoint
+  const newC: T2DPoint = transformColumnToRow(projectionC) as T2DPoint
+
+  drawLineByPoints(newA, newB);
+  drawLineByPoints(newA, newC);
+  drawLineByPoints(newC, newB);
+  drawLineByPoints(a, b);
+  drawLineByPoints(a, c);
+  drawLineByPoints(c, b);
 }();
