@@ -1,17 +1,9 @@
-function getColumnsOfMatrix(matrix: number[][]): number[][] {
-  const width = matrix[0].length;
-  const columns = [];
-
-  for (let colNumber = 0; colNumber < width; colNumber++) {
-    const column: number[] = matrix.map(row => row[colNumber]);
-    columns.push(column);
-  }
-
-  return columns;
+export function transformRowToColumn(row: number[]): number[][] {
+  return row.map(item => [ item ]);
 }
 
-function multiplyRow(first: number[], second: number[]) {
-  return first.map((item, index) => item * second[index]).reduce((acc, item) => acc + item);
+export function transformColumnToRow(column: number[][]): number[] {
+  return column.map(item => item[0]);
 }
 
 export function multiplyMatrix(first: number[][], second: number[][]) {
@@ -35,10 +27,18 @@ export function multiplyMatrix(first: number[][], second: number[][]) {
   return resultMatrix;
 }
 
-export function transformRowToColumn(row: number[]): number[][] {
-  return row.map(item => [ item ]);
+function getColumnsOfMatrix(matrix: number[][]): number[][] {
+  const width = matrix[0].length;
+  const columns = [];
+
+  for (let colNumber = 0; colNumber < width; colNumber++) {
+    const column: number[] = matrix.map(row => row[colNumber]);
+    columns.push(column);
+  }
+
+  return columns;
 }
 
-export function transformColumnToRow(column: number[][]): number[] {
-  return column.map(item => item[0]);
+function multiplyRow(first: number[], second: number[]) {
+  return first.map((item, index) => item * second[index]).reduce((acc, item) => acc + item);
 }

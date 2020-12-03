@@ -1,4 +1,4 @@
-import { globalState } from './globalState';
+import { globalState } from '../globalState';
 
 export function drawPixel(x: number, y: number, color = 'block') {
   if (!globalState.context) {

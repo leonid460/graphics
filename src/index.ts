@@ -1,10 +1,9 @@
 import { globalState } from './globalState';
-import { drawLine } from './drawLine';
 import './index.css';
 import { T2DPoint } from './types';
-import { multiplyMatrix, transformRowToColumn, transformColumnToRow } from './matrixUtils';
+import { drawProjectedTriangle } from './drawUtils/drawProjectedTriangle';
 
-function setUpCanvas(inputPerspective: number){
+function setUpCanvas(){
   const canvas = document.getElementById('scene') as HTMLCanvasElement;
 
   let width = canvas.offsetWidth;
@@ -33,44 +32,23 @@ function setUpCanvas(inputPerspective: number){
   globalState.context = ctx;
   globalState.width = width;
   globalState.height = height;
-  globalState.perspective = width * inputPerspective;
-  globalState.projectionCenterX = width / 2;
-  globalState.projectionCenterY = height / 2;
 }
 
-function render() {
-  window.requestAnimationFrame(() => render());
+function renderLoop(renderFunction: () => void) {
+  renderFunction();
+
+  window.requestAnimationFrame(() => renderLoop(renderFunction));
 }
 
 void function main() {
-  setUpCanvas(0.8);
+  setUpCanvas();
 
-  const drawLineByPoints = (first: T2DPoint, second: T2DPoint, color?: string) =>
-    drawLine(first[0], first[1], second[0], second[1], color);
+  renderLoop(() => {
+    const a: T2DPoint = [100, 100, 1, 1];
+    const b: T2DPoint = [100, 500, 1, 1];
+    const c: T2DPoint = [500, 0, 1, 1];
 
-  const a: T2DPoint = [100, 100, 1, 1];
-  const b: T2DPoint = [100, 500, 1, 1];
-  const c: T2DPoint = [500, 0, 1, 1];
-
-  const projectionMatrix = [
-    [1, 0, 0, 100],
-    [0, 1, 0, 100],
-    [0, 0, 1, 0],
-    [0 ,0 ,0, 1]
-  ];
-
-  const projectionA = multiplyMatrix(projectionMatrix, transformRowToColumn(a));
-  const projectionB = multiplyMatrix(projectionMatrix, transformRowToColumn(b));
-  const projectionC = multiplyMatrix(projectionMatrix, transformRowToColumn(c));
-
-  const newA: T2DPoint = transformColumnToRow(projectionA) as T2DPoint;
-  const newB: T2DPoint = transformColumnToRow(projectionB) as T2DPoint
-  const newC: T2DPoint = transformColumnToRow(projectionC) as T2DPoint
-
-  drawLineByPoints(newA, newB);
-  drawLineByPoints(newA, newC);
-  drawLineByPoints(newC, newB);
-  drawLineByPoints(a, b);
-  drawLineByPoints(a, c);
-  drawLineByPoints(c, b);
+    drawProjectedTriangle(a, b, c);
+  })
 }();
+

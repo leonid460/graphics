@@ -3,15 +3,16 @@ interface IGlobalState {
   context?: CanvasRenderingContext2D,
   width: number;
   height: number;
-  perspective: number;
-  projectionCenterX: number;
-  projectionCenterY: number;
+  projectionMatrix: number[][];
 }
 
 export const globalState: IGlobalState = {
   width: 0,
   height: 0,
-  perspective: 0,
-  projectionCenterX: 0,
-  projectionCenterY: 0
+  projectionMatrix: [
+    [1, 0, 0, 100],
+    [0, 1, 0, 100],
+    [0, 0, 1, 0],
+    [0 ,0 ,0, 1]
+  ]
 };
