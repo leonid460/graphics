@@ -1,7 +1,8 @@
 import { globalState } from './globalState';
 import './index.css';
 import { TPoint } from './types';
-import { drawProjectedTriangleStroke, drawFilledTriangle } from './drawUtils/drawProjectedTriangle';
+import { drawFilledTriangleWithStroke } from './drawUtils/drawFilledTriangleWithStroke';
+import { projectPoint } from "./projectPoint";
 
 function setUpCanvas(){
   const canvas = document.getElementById('scene') as HTMLCanvasElement;
@@ -48,8 +49,16 @@ void function main() {
     const b: TPoint = [100, 500, 1, 1];
     const c: TPoint = [500, 0, 1, 1];
 
-    drawFilledTriangle(a, b, c, 'green');
-    drawProjectedTriangleStroke(a, b, c);
+    const projectedA = projectPoint(a);
+    const projectedB = projectPoint(b);
+    const projectedC = projectPoint(c);
+
+    const colorsParams = {
+      fill: 'aquamarine',
+      stroke: 'pink'
+    }
+
+    drawFilledTriangleWithStroke([projectedA, projectedB, projectedC], colorsParams);
   }
 
   //renderPicture();

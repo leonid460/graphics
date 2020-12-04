@@ -1,23 +1,5 @@
 import { TPoint } from "../types";
-import { drawLine } from "./drawLine";
-import { projectPoint } from '../projectPoint';
 import { drawPixel } from './drawPixel';
-
-export function drawProjectedTriangleStroke(firstPoint: TPoint, secondPoint: TPoint, thirdPoint: TPoint) {
-  const drawLineByPoints = (first: TPoint, second: TPoint, color?: string) =>
-    drawLine(first[0], first[1], second[0], second[1], color);
-
-  const newFirstPoint = projectPoint(firstPoint);
-  const newSecondPoint = projectPoint(secondPoint);
-  const newThirdPoint = projectPoint(thirdPoint);
-
-  drawLineByPoints(newFirstPoint, newSecondPoint);
-  drawLineByPoints(newFirstPoint, newThirdPoint);
-  drawLineByPoints(newThirdPoint, newSecondPoint);
-  drawLineByPoints(firstPoint, secondPoint);
-  drawLineByPoints(firstPoint, thirdPoint);
-  drawLineByPoints(thirdPoint, secondPoint);
-}
 
 export function drawFilledTriangle(firstPoint: TPoint, secondPoint: TPoint, thirdPoint: TPoint, color?: string ) {
   const sortedPoints = sortTrianglePoints([firstPoint, secondPoint, thirdPoint]);
@@ -72,6 +54,15 @@ function defineLeftAndRightSides(firstXList: number[], secondXList: number[]): n
   }
 }
 
+function drawHorizontalLine(fromX: number, toX: number, level: number, color?: string) {
+  const [leftX, rightX] = fromX > toX ? [toX, fromX] : [fromX, toX];
+
+  console.log({ leftX, rightX })
+  for (let x = leftX; x < rightX; x++) {
+    drawPixel(x, level, color);
+  }
+}
+
 function interpolate (firstIndependent: number, firstDependent: number, secondIndependent: number, secondDependent: number): number[] {
   if (firstIndependent == secondIndependent) {
     return [firstDependent];
@@ -87,13 +78,4 @@ function interpolate (firstIndependent: number, firstDependent: number, secondIn
   }
 
   return values
-}
-
-function drawHorizontalLine(fromX: number, toX: number, level: number, color?: string) {
-  const [leftX, rightX] = fromX > toX ? [toX, fromX] : [fromX, toX];
-
-  console.log({ leftX, rightX })
-  for (let x = leftX; x < rightX; x++) {
-    drawPixel(x, level, color);
-  }
 }
