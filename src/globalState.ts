@@ -1,9 +1,13 @@
+// @ts-ignore
+import { ZBuffer } from "./ZBuffer";
+
 interface IGlobalState {
   canvas?: HTMLCanvasElement,
   context?: CanvasRenderingContext2D,
   width: number;
   height: number;
   projectionMatrix: number[][];
+  zBuffer?: ZBuffer;
 }
 
 export const globalState: IGlobalState = {

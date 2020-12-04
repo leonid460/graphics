@@ -3,6 +3,7 @@ import './index.css';
 import { TPoint } from './types';
 import { drawFilledTriangleWithStroke } from './drawUtils/drawFilledTriangleWithStroke';
 import { projectPoint } from "./projectPoint";
+import { ZBuffer } from './ZBuffer';
 
 function setUpCanvas(){
   const canvas = document.getElementById('scene') as HTMLCanvasElement;
@@ -33,6 +34,7 @@ function setUpCanvas(){
   globalState.context = ctx;
   globalState.width = width;
   globalState.height = height;
+  globalState.zBuffer = new ZBuffer(width, height);
 }
 
 function renderLoop(renderFunction: () => void) {
