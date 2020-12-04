@@ -1,20 +1,23 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { SourceMapDevToolPlugin } = require('webpack');
+
+const isDev = process.env.NODE_ENV === 'production';
+console.log('DEV MODE');
 
 function jsLoaders() {
-  return [
-    {
-      loader: 'ts-loader',
-    },
-  ];
+  return ['ts-loader'];
 }
 
 module.exports = {
   entry: './src/index.ts',
+  mode: isDev ? 'development' : 'production',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js'
   },
+
+  devtool: isDev ? 'source-map' : false,
 
   devServer: {
     contentBase: './dist' //where contents are served from
@@ -52,5 +55,8 @@ module.exports = {
       filename: 'index.html', // name of html file to be created
       template: './public/template.html' // source from which html file would be created
     }),
+    new SourceMapDevToolPlugin({
+      exclude: ['node_modules', 'dist']
+    })
   ]
 }
