@@ -1,6 +1,6 @@
 import { globalState } from '../globalState';
 
-export function drawPixel(x: number, y: number, color = 'block') {
+export function drawPixel(x: number, y: number, color = 'black') {
   if (!globalState.context) {
     throw new Error('No context in global state');
   }

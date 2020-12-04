@@ -1,6 +1,6 @@
 import { drawPixel } from './drawPixel';
 
-export function drawLine(x0: number, y0: number, x1: number, y1: number, color = 'color') {
+export function drawLine(x0: number, y0: number, x1: number, y1: number, color?: string ) {
   let steep = false;
 
   if (Math.abs(x0 - x1) < Math.abs(y0 - y1)) {

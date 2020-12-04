@@ -1,7 +1,7 @@
 import { globalState } from './globalState';
 import './index.css';
-import { T2DPoint } from './types';
-import { drawProjectedTriangle } from './drawUtils/drawProjectedTriangle';
+import { TPoint } from './types';
+import { drawProjectedTriangleStroke, drawFilledTriangle } from './drawUtils/drawProjectedTriangle';
 
 function setUpCanvas(){
   const canvas = document.getElementById('scene') as HTMLCanvasElement;
@@ -43,12 +43,16 @@ function renderLoop(renderFunction: () => void) {
 void function main() {
   setUpCanvas();
 
-  renderLoop(() => {
-    const a: T2DPoint = [100, 100, 1, 1];
-    const b: T2DPoint = [100, 500, 1, 1];
-    const c: T2DPoint = [500, 0, 1, 1];
+  const renderPicture = () => {
+    const a: TPoint = [100, 100, 1, 1];
+    const b: TPoint = [100, 500, 1, 1];
+    const c: TPoint = [500, 0, 1, 1];
 
-    drawProjectedTriangle(a, b, c);
-  })
+    drawFilledTriangle(a, b, c, 'green');
+    drawProjectedTriangleStroke(a, b, c);
+  }
+
+  //renderPicture();
+  renderLoop(renderPicture);
 }();
 
