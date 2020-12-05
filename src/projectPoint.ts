@@ -1,5 +1,5 @@
 import { TPoint } from "./types";
-import { multiplyMatrix, transformColumnToRow, transformRowToColumn } from "./matrixUtils";
+import { multiplyMatrix, transformColumnToRow, transformRowToColumn } from "./utils/matrix";
 import { globalState } from './globalState';
 
 

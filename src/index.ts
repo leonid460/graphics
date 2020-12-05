@@ -6,6 +6,7 @@ import { projectPoint } from "./projectPoint";
 import { ZBuffer } from './ZBuffer';
 import { getPolygonsFromObj } from './getPolygonFromObj';
 import { model } from './model';
+import { rotatePolygonOverX, rotatePolygonOverY } from './actions/rotate';
 
 function setUpCanvas(){
   const canvas = document.getElementById('scene') as HTMLCanvasElement;
@@ -48,7 +49,10 @@ function renderLoop(renderFunction: () => void) {
 void function main() {
   setUpCanvas();
   const polygons = getPolygonsFromObj(model);
-  const adaptedPolygons = adaptPolygons(polygons);
+  const adaptedPolygons = adaptPolygons(polygons)
+    .map(polygon => rotatePolygonOverX(polygon, 45))
+    .map(polygon => rotatePolygonOverY(polygon, 45))
+
   const firstPolygon = adaptedPolygons[0];
   const secondPolygon = adaptedPolygons[1];
   const [a, b, c] = firstPolygon;
