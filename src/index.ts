@@ -1,9 +1,11 @@
-import { globalState } from './globalState';
+import { globalState, setGlobalHeight, setGlobalWidth } from './globalState';
 import './index.css';
 import { TPoint } from './types';
 import { drawFilledTriangleWithStroke } from './drawUtils/drawFilledTriangleWithStroke';
 import { projectPoint } from "./projectPoint";
 import { ZBuffer } from './ZBuffer';
+import { getPolygonsFromObj } from './getPolygonFromObj';
+import { model } from './model';
 
 function setUpCanvas(){
   const canvas = document.getElementById('scene') as HTMLCanvasElement;
@@ -12,6 +14,8 @@ function setUpCanvas(){
   let height = canvas.offsetHeight;
 
   const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+  globalState.canvas = canvas;
+  globalState.context = ctx;
 
   function onResize () {
     width = canvas.offsetWidth;
@@ -25,16 +29,14 @@ function setUpCanvas(){
       canvas.width = width;
       canvas.height = height;
     }
+
+    setGlobalWidth(width);
+    setGlobalHeight(height);
+    globalState.zBuffer = new ZBuffer(width, height);
   }
 
   window.addEventListener('resize', onResize);
   onResize();
-
-  globalState.canvas = canvas;
-  globalState.context = ctx;
-  globalState.width = width;
-  globalState.height = height;
-  globalState.zBuffer = new ZBuffer(width, height);
 }
 
 function renderLoop(renderFunction: () => void) {
@@ -45,25 +47,51 @@ function renderLoop(renderFunction: () => void) {
 
 void function main() {
   setUpCanvas();
+  const polygons = getPolygonsFromObj(model);
+  const adaptedPolygons = adaptPolygons(polygons);
+  const firstPolygon = adaptedPolygons[0];
+  const secondPolygon = adaptedPolygons[1];
+  const [a, b, c] = firstPolygon;
+  const [d, e, f] = secondPolygon;
+  const colorsParams = {
+    fill: 'aquamarine',
+    stroke: 'red'
+  }
 
   const renderPicture = () => {
-    const a: TPoint = [100, 100, 1, 1];
-    const b: TPoint = [100, 500, 1, 1];
-    const c: TPoint = [500, 0, 1, 1];
-
     const projectedA = projectPoint(a);
     const projectedB = projectPoint(b);
     const projectedC = projectPoint(c);
 
-    const colorsParams = {
-      fill: 'aquamarine',
-      stroke: 'pink'
-    }
+    const projectedD = projectPoint(d);
+    const projectedE = projectPoint(e);
+    const projectedF = projectPoint(f);
 
+    drawFilledTriangleWithStroke([projectedD, projectedE, projectedF], colorsParams);
     drawFilledTriangleWithStroke([projectedA, projectedB, projectedC], colorsParams);
   }
 
+  const renderPolygons = () => {
+    adaptedPolygons.forEach(polygon => {
+      const [a, b, c] = polygon;
+
+      const projectedA = projectPoint(a);
+      const projectedB = projectPoint(b);
+      const projectedC = projectPoint(c);
+
+      drawFilledTriangleWithStroke([projectedA, projectedB, projectedC], colorsParams);
+    })
+  }
+
+  //renderPolygons();
   //renderPicture();
-  renderLoop(renderPicture);
+  renderLoop(renderPolygons);
 }();
 
+function adaptPolygons(rawPolygons: number[][][]): TPoint[][] {
+  return rawPolygons.map(getPointsOfPolygon);
+}
+
+function getPointsOfPolygon(polygon: number[][]): TPoint[] {
+  return polygon.map(vertex => [vertex[0], vertex[1], vertex[2], 1]);
+}

@@ -3,7 +3,6 @@ import { drawPixel } from './drawPixel';
 
 export function drawFilledTriangle(firstPoint: TPoint, secondPoint: TPoint, thirdPoint: TPoint, color?: string ) {
   const sortedPoints = sortTrianglePoints([firstPoint, secondPoint, thirdPoint]);
-  console.log({ sortedPoints });
 
   const xBetweenFirstAndSecond = interpolateXForTwoPoints(sortedPoints[0],sortedPoints[1]);
   const xBetweenSecondAndThird = interpolateXForTwoPoints(sortedPoints[1], sortedPoints[2]);
@@ -22,7 +21,7 @@ export function drawFilledTriangle(firstPoint: TPoint, secondPoint: TPoint, thir
 function sortTrianglePoints(points: [TPoint, TPoint, TPoint]): [TPoint, TPoint, TPoint] {
   let [resultPoint0, resultPoint1, resultPoint2] = points;
 
-  if (resultPoint0[1] < resultPoint1[1]) {
+  if (resultPoint1[1] < resultPoint0[1]) {
     [resultPoint0, resultPoint1] = [resultPoint1, resultPoint0];
   }
 
@@ -57,7 +56,6 @@ function defineLeftAndRightSides(firstXList: number[], secondXList: number[]): n
 function drawHorizontalLine(fromX: number, toX: number, level: number, color?: string) {
   const [leftX, rightX] = fromX > toX ? [toX, fromX] : [fromX, toX];
 
-  console.log({ leftX, rightX })
   for (let x = leftX; x < rightX; x++) {
     drawPixel(x, level, color);
   }
