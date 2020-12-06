@@ -51,8 +51,8 @@ void function main() {
   setUpCanvas();
   const polygons = getPolygonsFromObj(model);
   const adaptedPolygons = adaptPolygons(polygons)
-    .map(polygon => rotatePolygonOverX(polygon, 45))
     .map(polygon => rotatePolygonOverY(polygon, 45))
+    .map(polygon => rotatePolygonOverX(polygon, 45))
 
   const testRawPolygon1 = [[-1, -1, 10], [1, 1, 10], [1, -1, 10]];
   const testRawPolygon2 = [[-1, -1, 0], [-1, 1, 0], [1, -1, 0]];
@@ -63,7 +63,7 @@ void function main() {
 
   const colorsParams1 = {
     fill: 'red',
-    stroke: 'red'
+    stroke: 'black'
   }
 
   const colorsParams2 = {
@@ -97,8 +97,8 @@ void function main() {
   }
 
   // renderPolygons();
-  renderPicture();
-  //renderLoop(renderPolygons);
+  //renderPicture();
+  renderLoop(renderPolygons);
 }();
 
 function adaptPolygons(rawPolygons: number[][][]): TPoint[][] {

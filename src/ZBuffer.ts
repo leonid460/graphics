@@ -9,10 +9,12 @@ export class ZBuffer {
   }
 
   get(x: number, y: number) {
+    [x, y] = [x, y].map(Math.floor);
     return this.data[y][x]
   }
 
   set(x: number, y: number, value: number) {
+    [x, y] = [x, y].map(Math.floor);
     this.data[y][x] = value;
   }
 }
