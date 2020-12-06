@@ -17,8 +17,18 @@ export class ZBuffer {
   }
 }
 
-function createEmptyMatrix(width: number, height: number) {
-  const matrix = new Array(height);
+function createEmptyMatrix(width: number, height: number): number[][] {
+  const matrix = [];
 
-  return matrix.fill(new Array(width).fill(0));
+  for (let i = 0; i < height; i++) {
+    const row = [];
+
+    for (let j = 0; j < width; j++) {
+      row.push(-Infinity);
+    }
+
+    matrix.push(row);
+  }
+
+  return matrix;
 }

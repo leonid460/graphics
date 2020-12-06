@@ -8,6 +8,6 @@ type TColorsParams = {
 }
 
 export function drawFilledTriangleWithStroke(points: [TPoint, TPoint, TPoint], colorsParams: TColorsParams ) {
-  drawFilledTriangle(...points, colorsParams.fill);
   drawTriangleStroke(...points, colorsParams.stroke);
+  drawFilledTriangle(...points, colorsParams.fill);
 }

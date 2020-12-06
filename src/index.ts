@@ -33,8 +33,9 @@ function setUpCanvas(){
 
     setGlobalWidth(width);
     setGlobalHeight(height);
-    globalState.zBuffer = new ZBuffer(width, height);
   }
+
+  globalState.zBuffer = new ZBuffer(width, height);
 
   window.addEventListener('resize', onResize);
   onResize();
@@ -53,13 +54,21 @@ void function main() {
     .map(polygon => rotatePolygonOverX(polygon, 45))
     .map(polygon => rotatePolygonOverY(polygon, 45))
 
-  const firstPolygon = adaptedPolygons[0];
-  const secondPolygon = adaptedPolygons[1];
+  const testRawPolygon1 = [[-1, -1, 10], [1, 1, 10], [1, -1, 10]];
+  const testRawPolygon2 = [[-1, -1, 0], [-1, 1, 0], [1, -1, 0]];
+
+  const [firstPolygon, secondPolygon] = adaptPolygons([testRawPolygon1, testRawPolygon2]);
   const [a, b, c] = firstPolygon;
   const [d, e, f] = secondPolygon;
-  const colorsParams = {
-    fill: 'aquamarine',
+
+  const colorsParams1 = {
+    fill: 'red',
     stroke: 'red'
+  }
+
+  const colorsParams2 = {
+    fill: 'blue',
+    stroke: 'blue'
   }
 
   const renderPicture = () => {
@@ -71,8 +80,8 @@ void function main() {
     const projectedE = projectPoint(e);
     const projectedF = projectPoint(f);
 
-    drawFilledTriangleWithStroke([projectedD, projectedE, projectedF], colorsParams);
-    drawFilledTriangleWithStroke([projectedA, projectedB, projectedC], colorsParams);
+    drawFilledTriangleWithStroke([projectedA, projectedB, projectedC], colorsParams1);
+    drawFilledTriangleWithStroke([projectedD, projectedE, projectedF], colorsParams2);
   }
 
   const renderPolygons = () => {
@@ -83,13 +92,13 @@ void function main() {
       const projectedB = projectPoint(b);
       const projectedC = projectPoint(c);
 
-      drawFilledTriangleWithStroke([projectedA, projectedB, projectedC], colorsParams);
+      drawFilledTriangleWithStroke([projectedA, projectedB, projectedC], colorsParams1);
     })
   }
 
-  //renderPolygons();
-  //renderPicture();
-  renderLoop(renderPolygons);
+  // renderPolygons();
+  renderPicture();
+  //renderLoop(renderPolygons);
 }();
 
 function adaptPolygons(rawPolygons: number[][][]): TPoint[][] {
