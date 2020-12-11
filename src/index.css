@@ -7,3 +7,40 @@ canvas {
     width: 100vw;
     height: 100vh;
 }
+
+.control-panel__container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 5px;
+    background: #efefef;
+}
+
+.control-panel__inner-buttons-panel {
+    height: 200px;
+    padding: 5px;
+    background: gray;
+}
+
+.control-panel__inner-buttons-panel__turn-buttons-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.control-panel__inner-buttons-panel__turn-button {
+    border: 1px solid black;
+    margin-right: 10px;
+    background: #efefef;
+    outline: none;
+    cursor: pointer;
+}
+
+.control-panel__inner-buttons-panel__turn-button:last-child {
+    margin-right: 0;
+}
