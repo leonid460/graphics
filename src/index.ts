@@ -33,9 +33,8 @@ function setUpCanvas(){
 
     setGlobalWidth(width);
     setGlobalHeight(height);
+    globalState.zBuffer = new ZBuffer(width, height);
   }
-
-  globalState.zBuffer = new ZBuffer(width, height);
 
   window.addEventListener('resize', onResize);
   onResize();
@@ -85,18 +84,24 @@ void function main() {
   }
 
   const renderPolygons = () => {
-    adaptedPolygons.forEach(polygon => {
+    const projectedPolygons = adaptedPolygons.map(polygon => {
       const [a, b, c] = polygon;
 
       const projectedA = projectPoint(a);
       const projectedB = projectPoint(b);
       const projectedC = projectPoint(c);
 
-      drawFilledTriangleWithStroke([projectedA, projectedB, projectedC], colorsParams1);
-    })
+      return [projectedA, projectedB, projectedC];
+    });
+
+    projectedPolygons.forEach(polygon => {
+      const [a, b, c] = polygon;
+
+      drawFilledTriangleWithStroke([a, b, c], colorsParams1);
+    });
   }
 
-  // renderPolygons();
+  //renderPolygons();
   //renderPicture();
   renderLoop(renderPolygons);
 }();

@@ -4,7 +4,6 @@ import { globalState } from '../globalState';
 
 export function drawFilledTriangle(firstPoint: TPoint, secondPoint: TPoint, thirdPoint: TPoint, color?: string ) {
   let sortedPoints = sortTrianglePoints([firstPoint, secondPoint, thirdPoint]);
-  sortedPoints.forEach(point => point[1] = Math.floor(point[1]))
 
   const xBetweenFirstAndSecond = interpolateXForTwoPoints(sortedPoints[0],sortedPoints[1]);
   const xBetweenSecondAndThird = interpolateXForTwoPoints(sortedPoints[1], sortedPoints[2]);
@@ -67,16 +66,6 @@ function interpolateZForTwoPoints(firstPoint: TPoint, secondPoint: TPoint): numb
   return interpolate(y0, z0, y1, z1)
 }
 
-function defineLeftAndRightXList(firstXList: number[], secondXList: number[]): number[][] {
-  const m = firstXList.length / 2;
-
-  if (firstXList[m] < secondXList[m]) {
-    return [firstXList, secondXList];
-  } else {
-    return [secondXList, firstXList];
-  }
-}
-
 function defineLeftAndRightLists(xLists: number[][], zLists: number[][]): { zLists: number[][], xLists: number[][] } {
   const [firstXList, secondXList] = xLists;
   const [firstZList, secondZList] = zLists;
@@ -97,18 +86,14 @@ function defineLeftAndRightLists(xLists: number[][], zLists: number[][]): { zLis
 }
 
 function drawHorizontalLine(fromX: number, toX: number, level: number, zSegment: number[], color?: string) {
-  const [leftX, rightX] = fromX > toX ? [toX, fromX] : [fromX, toX];
-
   if (!globalState.zBuffer) {
     throw new Error('no z buffer was initialized');
   }
 
+  const [leftX, rightX] = fromX > toX ? [toX, fromX] : [fromX, toX];
+
   for (let x = leftX; x <= rightX; x++) {
     const z = zSegment[x - leftX];
-
-    let zFromBuffer = globalState.zBuffer.get(x, level);
-    const shouldDraw = z >= zFromBuffer;
-
     drawBufferizedPixel(x, level, z, color);
   }
 }
@@ -122,18 +107,15 @@ function interpolate (firstIndependent: number, firstDependent: number, secondIn
   const a = (secondDependent - firstDependent) / (secondIndependent - firstIndependent)
   let currentDependent = firstDependent;
 
-  fromTo(firstIndependent, secondIndependent, (index) => {
-    values.push(currentDependent);
-    currentDependent += a;
-  })
+  const from = firstIndependent;
+  const to = secondIndependent;
 
-  return values
-}
-
-function fromTo(from: number, to: number, action: (index: number) => void) {
   const [left, right] = from < to ? [from, to] : [to, from];
 
   for (let i = left; i <= right; i++) {
-    action(i);
+    values.push(currentDependent);
+    currentDependent += a;
   }
+
+  return values
 }

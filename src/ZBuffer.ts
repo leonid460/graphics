@@ -9,13 +9,16 @@ export class ZBuffer {
   }
 
   get(x: number, y: number) {
-    [x, y] = [x, y].map(Math.floor);
-    return this.data[y][x]
+    const roundedX = Math.floor(x);
+    const roundedY = Math.floor(y);
+
+    return this.data[roundedY][roundedX]
   }
 
   set(x: number, y: number, value: number) {
-    [x, y] = [x, y].map(Math.floor);
-    this.data[y][x] = value;
+    const roundedX = Math.floor(x);
+    const roundedY = Math.floor(y);
+    this.data[roundedY][roundedX] = value;
   }
 }
 
