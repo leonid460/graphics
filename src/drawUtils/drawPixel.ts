@@ -20,16 +20,6 @@ export function drawBufferizedPixel(x: number, y: number, z: number, color = 'bl
   const zFromBuffer = globalState.zBuffer.get(x, y);
   const shouldDraw = z >= zFromBuffer;
 
-  // if (!memo && shouldDraw) {
-  //   console.log(zFromBuffer);
-  //   debugger;
-  // }
-
-  // if (color === 'blue' && y === 168 && shouldDraw) {
-  //   debugger;
-  //   console.log(zFromBuffer);
-  // }
-
   if (shouldDraw) {
     drawPixel(x, y, color);
     globalState.zBuffer.set(x, y, z);
