@@ -1,7 +1,6 @@
 import {TPoint, TPolygon} from "../types";
-import { multiplyMatrix, transformColumnToRow, transformRowToColumn } from "../utils/matrix";
-import { globalState } from '../globalState';
-
+import { multiplyMatrix, transformColumnToRow, transformRowToColumn } from "../math/matrix";
+import { globalState } from './globalState';
 
 export function projectPoint(point: TPoint): TPoint {
   const projection = multiplyMatrix(globalState.projectionMatrix, transformRowToColumn(point));

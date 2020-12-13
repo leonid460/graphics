@@ -1,6 +1,6 @@
 import { drawBufferizedPixel } from './drawPixel';
 import {TPoint} from "../types";
-import { interpolate } from '../utils/interpolate';
+import { interpolate } from '../math/interpolate';
 
 export function drawLine(first: TPoint, second: TPoint, color?: string) {
   let [x0, y0, z0] = first.map(Math.round);

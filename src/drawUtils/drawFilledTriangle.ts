@@ -1,7 +1,7 @@
 import { TPoint, TPolygon } from "../types";
 import { drawBufferizedPixel } from './drawPixel';
-import { globalState } from '../globalState';
-import { interpolate } from '../utils/interpolate';
+import { globalState } from '../environment/globalState';
+import { interpolate } from '../math/interpolate';
 
 export function drawFilledTriangle(firstPoint: TPoint, secondPoint: TPoint, thirdPoint: TPoint, color?: string) {
   let sortedPoints = sortTrianglePoints([firstPoint, secondPoint, thirdPoint]);

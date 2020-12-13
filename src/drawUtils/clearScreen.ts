@@ -1,4 +1,4 @@
-import { globalState } from '../globalState';
+import { globalState } from '../environment/globalState';
 
 export function clearScreen() {
   const { context, height, width } = globalState;

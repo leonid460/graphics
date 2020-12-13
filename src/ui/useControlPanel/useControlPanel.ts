@@ -1,16 +1,6 @@
-interface INestedElementParams {
-  tagName: string;
-  className?: string;
-  onClick?: () => void;
-  children?: INestedElementParams[] | string;
-}
-
-interface IControlPanelProps {
-  handleTurnLeft: () => void;
-  handleTurnRight: () => void;
-  handleTurnUp: () => void;
-  handleTurnDown: () => void;
-}
+import './styles.css';
+import { createNestedElements } from '../html';
+import { IControlPanelProps } from './types';
 
 export function useControlPanel({handleTurnLeft, handleTurnRight, handleTurnDown, handleTurnUp}: IControlPanelProps) {
   const root = document.getElementById('root');
@@ -63,33 +53,4 @@ export function useControlPanel({handleTurnLeft, handleTurnRight, handleTurnDown
   })
 
   root.append(panelContainer);
-}
-
-function createNestedElements(elementParams: INestedElementParams) {
-  const { tagName, className, children} = elementParams;
-  const element = createDomElementWithClass(tagName, className);
-
-  if (children) {
-    if (typeof children === 'string') {
-      element.innerText = children;
-    } else {
-      children.forEach(nestedParams => {
-        const nestedElement = createNestedElements(nestedParams);
-        nestedElement.onclick = nestedParams.onClick || null;
-        element.append(nestedElement);
-      })
-    }
-  }
-
-  return element;
-}
-
-function createDomElementWithClass(tagName: string, className?: string) {
-  const element = document.createElement(tagName);
-
-  if (className) {
-    element.className = className;
-  }
-
-  return element;
 }

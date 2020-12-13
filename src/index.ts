@@ -1,46 +1,13 @@
-import { globalState, setGlobalHeight, setGlobalWidth } from './globalState';
 import './index.css';
-import { TPolygon } from './types';
-import { drawFilledTriangleWithStroke } from './drawUtils/drawFilledTriangleWithStroke';
-import { projectPolygon } from "./projection";
-import { ZBuffer } from './ZBuffer';
+import { setUpEnvironment } from './environment/setupEnvironment';
 import { getPolygonsFromObj } from './getPolygonFromObj';
-import { model } from './model';
-import { rotatePolygonOverX, rotatePolygonOverY } from './actions/rotate';
-import { useControlPanel } from './ui/useControlPanel';
+import { adaptRawPolygons } from './model/adaptors';
+import { projectPolygon } from "./environment/projection";
 import { clearScreen } from './drawUtils/clearScreen';
-
-function setUpCanvas(){
-  const canvas = document.getElementById('scene') as HTMLCanvasElement;
-
-  let width = canvas.offsetWidth;
-  let height = canvas.offsetHeight;
-
-  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-  globalState.canvas = canvas;
-  globalState.context = ctx;
-
-  function onResize () {
-    width = canvas.offsetWidth;
-    height = canvas.offsetHeight;
-
-    if (window.devicePixelRatio > 1) {
-      canvas.width = canvas.clientWidth * 2;
-      canvas.height = canvas.clientHeight * 2;
-      ctx.scale(2, 2);
-    } else {
-      canvas.width = width;
-      canvas.height = height;
-    }
-
-    setGlobalWidth(width);
-    setGlobalHeight(height);
-    globalState.zBuffer = new ZBuffer(width, height);
-  }
-
-  window.addEventListener('resize', onResize);
-  onResize();
-}
+import { drawFilledTriangleWithStroke } from './drawUtils/drawFilledTriangleWithStroke';
+import { rotatePolygonOverX, rotatePolygonOverY } from './actions/rotate';
+import { useControlPanel } from './ui/useControlPanel/useControlPanel';
+import { loadModel } from './model/loadModel';
 
 async function renderLoop(renderFunction: () => void) {
   clearScreen();
@@ -50,10 +17,11 @@ async function renderLoop(renderFunction: () => void) {
 }
 
 void async function main() {
-  setUpCanvas();
+  setUpEnvironment();
+  const model = loadModel();
 
   const polygons = getPolygonsFromObj(model);
-  let adaptedPolygons = adaptPolygons(polygons).map(polygon => rotatePolygonOverY(polygon, -30))
+  let adaptedPolygons = adaptRawPolygons(polygons).map(polygon => rotatePolygonOverY(polygon, -30))
 
   const fillColors = ['green', 'blue', 'purple', 'yellow', 'red', 'brown', 'green', 'blue', 'purple', 'yellow', 'red', 'brown'];
 
@@ -93,11 +61,5 @@ void async function main() {
 
 
 
-function adaptPolygons(rawPolygons: number[][][]): TPolygon[] {
-  return rawPolygons.map(getPointsOfPolygon);
-}
 
-function getPointsOfPolygon(polygon: number[][]): TPolygon {
-  return polygon.map(vertex => [vertex[0], vertex[1], vertex[2], 1]) as TPolygon;
-}
 

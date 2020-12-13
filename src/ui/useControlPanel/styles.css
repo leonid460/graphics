@@ -1,0 +1,60 @@
+.control-panel__container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 5px;
+    background: #efefef;
+}
+
+.control-panel__inner-buttons-panel {
+    padding: 5px;
+    border-radius: 50%;
+    background: #bbbaba;
+}
+
+.control-panel__inner-buttons-panel__turn-buttons-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.control-panel__inner-buttons-panel__turn-buttons-container__row {
+    display: flex;
+    flex-direction: row;
+}
+
+.control-panel__inner-buttons-panel__turn-button__left,
+.control-panel__inner-buttons-panel__turn-button__right,
+.control-panel__inner-buttons-panel__turn-button__up,
+.control-panel__inner-buttons-panel__turn-button__down {
+    width: 40px;
+    height: 40px;
+    background: #434350;
+    outline: none;
+    cursor: pointer;
+}
+
+.control-panel__inner-buttons-panel__turn-button__left {
+    margin-right: 16px;
+    border-radius: 30% 70% 70% 30% / 50% 50% 50% 50%;
+}
+
+.control-panel__inner-buttons-panel__turn-button__right {
+    border-radius: 70% 30% 30% 70% / 50% 50% 50% 50%;
+}
+
+.control-panel__inner-buttons-panel__turn-button__up {
+    margin-bottom: -10px;
+    border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
+}
+
+.control-panel__inner-buttons-panel__turn-button__down {
+    margin-top: -10px;
+    border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+}

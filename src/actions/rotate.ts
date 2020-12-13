@@ -1,6 +1,6 @@
 import { TPoint, TPolygon } from "../types";
-import { multiplyMatrix } from '../utils/matrix';
-import { degreesToRadians } from '../utils/angles';
+import { multiplyMatrix } from '../math/matrix';
+import { degreesToRadians } from '../math/angles';
 
 export function rotatePolygonOverX(polygon: TPolygon, degreeAngle: number): TPolygon {
   return polygon.map(point => rotatePointOverX(point, degreeAngle)) as TPolygon;
