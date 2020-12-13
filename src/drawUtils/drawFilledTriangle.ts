@@ -37,6 +37,7 @@ export function drawFilledTriangle(firstPoint: TPoint, secondPoint: TPoint, thir
     const zSegment = interpolate(xLeft, zLeft, xRight, zRight);
     // console.log({ xLeft, zLeft, xRight, zRight });
     // console.log({ zSegment });
+    // debugger;
     drawHorizontalLine(xLeft, xRight, currentY, zSegment, color);
   }
 }
@@ -103,6 +104,10 @@ function drawHorizontalLine(fromX: number, toX: number, level: number, zSegment:
   }
 
   const [leftX, rightX] = fromX > toX ? [toX, fromX] : [fromX, toX];
+
+  if (fromX > toX) {
+    zSegment = zSegment.reverse();
+  }
 
   for (let x = leftX; x <= rightX; x++) {
     const z = zSegment[x - leftX];

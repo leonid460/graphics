@@ -56,8 +56,9 @@ void async function main() {
   let adaptedPolygons = adaptPolygons(polygons)
     .map(polygon => rotatePolygonOverY(polygon, 45))
     .map(polygon => rotatePolygonOverX(polygon, 45))
+    .map(polygon => rotatePolygonOverY(polygon, -15))
 
- // adaptedPolygons = [adaptedPolygons[1], adaptedPolygons[4]];
+  // adaptedPolygons = [adaptedPolygons[0], adaptedPolygons[10]];
 
   const fillColors = ['green', 'blue', 'purple', 'yellow', 'red', 'brown', 'green', 'blue', 'purple', 'yellow', 'red', 'brown'];
 

@@ -25,10 +25,10 @@ export function drawBufferizedPixel(x: number, y: number, z: number, color = 'bl
   //   debugger;
   // }
 
-  if (x === 977 && y === 401) {
-    // debugger;
-    // console.log(zFromBuffer);
-  }
+  // if (color === 'blue' && y === 168 && shouldDraw) {
+  //   debugger;
+  //   console.log(zFromBuffer);
+  // }
 
   if (shouldDraw) {
     drawPixel(x, y, color);
