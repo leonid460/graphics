@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { SourceMapDevToolPlugin } = require('webpack');
 
 const isDev = process.env.NODE_ENV === 'production';
-console.log('DEV MODE');
+console.log(isDev ? 'DEV MODE' : 'PROD MODE');
 
 function jsLoaders() {
   return ['ts-loader'];

@@ -1,8 +1,14 @@
 import { INestedElementParams } from './types';
 
 export function createNestedElements(elementParams: INestedElementParams) {
-  const { tagName, className, children} = elementParams;
+  const { tagName, className, children, props} = elementParams;
   const element = createDomElementWithClass(tagName, className);
+
+  if (props) {
+    props.forEach(property => {
+      element.setAttribute(property.name, property.value);
+    })
+  }
 
   if (children) {
     if (typeof children === 'string') {

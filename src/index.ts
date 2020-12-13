@@ -37,15 +37,25 @@ void async function main() {
   const handleTurnRight = () => turnPolygonsY(15);
   const handleTurnUp = () => turnPolygonsX(-15);
   const handleTurnDown = () => turnPolygonsX(15);
+  let autoRotationMode = false;
+  const toggleAutoMode = () => {
+    autoRotationMode = !autoRotationMode;
+  }
 
   useControlPanel({
     handleTurnRight,
     handleTurnLeft,
     handleTurnUp,
-    handleTurnDown
+    handleTurnDown,
+    toggleAutoMode
   });
 
   const renderPolygons = async () => {
+    if (autoRotationMode) {
+      turnPolygonsY(-2);
+      turnPolygonsX(2);
+    }
+
     const promises = adaptedPolygons.map((polygon, index) => {
       return drawFilledTriangleWithStroke(projectPolygon(polygon), {
         stroke: 'black',

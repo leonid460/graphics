@@ -6,6 +6,7 @@
   "scripts": {
     "start": "webpack serve --mode development",
     "build": "rm -rf ./dist && webpack --mode production",
+    "serve": "npm run build && serve -s ./dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
