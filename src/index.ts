@@ -54,9 +54,9 @@ void async function main() {
 
   const polygons = getPolygonsFromObj(model);
   let adaptedPolygons = adaptPolygons(polygons)
-    .map(polygon => rotatePolygonOverY(polygon, 45))
-    .map(polygon => rotatePolygonOverX(polygon, 45))
-    .map(polygon => rotatePolygonOverY(polygon, -15))
+    //.map(polygon => rotatePolygonOverY(polygon, 45))
+    //.map(polygon => rotatePolygonOverX(polygon, 45))
+    //.map(polygon => rotatePolygonOverY(polygon, -15))
 
   // adaptedPolygons = [adaptedPolygons[0], adaptedPolygons[10]];
 
@@ -66,11 +66,20 @@ void async function main() {
     adaptedPolygons = adaptPolygons(adaptedPolygons).map(polygon => rotatePolygonOverY(polygon, deg));
   }
 
+  const turnPolygonsX = (deg: number) => {
+    adaptedPolygons = adaptPolygons(adaptedPolygons).map(polygon => rotatePolygonOverX(polygon, deg));
+  }
+
   const handleTurnLeft = () => turnPolygonsY(-15);
   const handleTurnRight = () => turnPolygonsY(15);
+  const handleTurnUp = () => turnPolygonsX(15);
+  const handleTurnDown = () => turnPolygonsX(-15);
+
   useControlPanel({
     handleTurnRight,
-    handleTurnLeft
+    handleTurnLeft,
+    handleTurnUp,
+    handleTurnDown
   });
 
   const renderPolygons = async () => {
@@ -84,7 +93,7 @@ void async function main() {
     await Promise.all(promises);
   }
 
-  //await renderPolygons();
+  // await renderPolygons();
   await renderLoop(renderPolygons);
 }();
 
