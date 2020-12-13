@@ -12,7 +12,7 @@ export function interpolate (firstIndependent: number, firstDependent: number, s
   const to = secondIndependent;
 
   for (let i = from; i <= to; i++) {
-    values.push(Math.floor(currentDependent));
+    values.push(Math.round(currentDependent));
     currentDependent += a;
   }
 

@@ -1,8 +1,8 @@
 import { globalState, setGlobalHeight, setGlobalWidth } from './globalState';
 import './index.css';
-import { TPoint, TPolygon } from './types';
+import { TPolygon } from './types';
 import { drawFilledTriangleWithStroke } from './drawUtils/drawFilledTriangleWithStroke';
-import { projectPoint } from "./projectPoint";
+import { projectPolygon } from "./projection";
 import { ZBuffer } from './ZBuffer';
 import { getPolygonsFromObj } from './getPolygonFromObj';
 import { model } from './model';
@@ -53,16 +53,16 @@ void async function main() {
   setUpCanvas();
 
   const polygons = getPolygonsFromObj(model);
-  let adaptedPolygons = adaptPolygons(polygons);
+  let adaptedPolygons = adaptPolygons(polygons).map(polygon => rotatePolygonOverY(polygon, -30))
 
   const fillColors = ['green', 'blue', 'purple', 'yellow', 'red', 'brown', 'green', 'blue', 'purple', 'yellow', 'red', 'brown'];
 
   const turnPolygonsY = (deg: number) => {
-    adaptedPolygons = adaptPolygons(adaptedPolygons).map(polygon => rotatePolygonOverY(polygon, deg));
+    adaptedPolygons = adaptedPolygons.map(polygon => rotatePolygonOverY(polygon, deg));
   }
 
   const turnPolygonsX = (deg: number) => {
-    adaptedPolygons = adaptPolygons(adaptedPolygons).map(polygon => rotatePolygonOverX(polygon, deg));
+    adaptedPolygons = adaptedPolygons.map(polygon => rotatePolygonOverX(polygon, deg));
   }
 
   const handleTurnLeft = () => turnPolygonsY(-15);
@@ -88,15 +88,10 @@ void async function main() {
     await Promise.all(promises);
   }
 
-  // await renderPolygons();
   await renderLoop(renderPolygons);
 }();
 
-function projectPolygon(polygon: TPolygon): TPolygon {
-  const [a, b, c] = polygon;
 
-  return [projectPoint(a), projectPoint(b), projectPoint(c)];
-}
 
 function adaptPolygons(rawPolygons: number[][][]): TPolygon[] {
   return rawPolygons.map(getPointsOfPolygon);

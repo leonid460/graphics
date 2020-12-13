@@ -14,21 +14,19 @@ export class ZBuffer {
   }
 
   get(x: number, y: number) {
-    const roundedX = Math.floor(x);
-    const roundedY = Math.floor(y);
+    const roundedX = Math.round(x);
+    const roundedY = Math.round(y);
 
     return this.data[roundedY][roundedX]
   }
 
   set(x: number, y: number, value: number) {
-    const roundedX = Math.floor(x);
-    const roundedY = Math.floor(y);
+    const roundedX = Math.round(x);
+    const roundedY = Math.round(y);
     this.data[roundedY][roundedX] = value;
   }
 
   clear() {
-    // this.data = createEmptyMatrix(this.width, this.height);
-
     this.data.forEach(row => {
       row.forEach((_, index) => {
         row[index] = -Infinity;

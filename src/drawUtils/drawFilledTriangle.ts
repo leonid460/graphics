@@ -5,7 +5,7 @@ import { interpolate } from '../utils/interpolate';
 
 export function drawFilledTriangle(firstPoint: TPoint, secondPoint: TPoint, thirdPoint: TPoint, color?: string) {
   let sortedPoints = sortTrianglePoints([firstPoint, secondPoint, thirdPoint]);
-  sortedPoints = sortedPoints.map(point => point.map(Math.floor)) as TPolygon;
+  sortedPoints = sortedPoints.map(point => point.map(Math.round)) as TPolygon;
 
   const x01 = interpolateXForTwoPoints(sortedPoints[0],sortedPoints[1]);
   const x12 = interpolateXForTwoPoints(sortedPoints[1], sortedPoints[2]);
@@ -20,7 +20,7 @@ export function drawFilledTriangle(firstPoint: TPoint, secondPoint: TPoint, thir
   z01.pop();
   const z012 = [...z01, ...z12 ];
 
-  const m = Math.floor(x012.length / 2);
+  const m = Math.round(x012.length / 2);
   let leftXList, rightXList;
   let leftZList, rightZList;
 
@@ -41,8 +41,6 @@ export function drawFilledTriangle(firstPoint: TPoint, secondPoint: TPoint, thir
 
     const zSegment = interpolate(xLeft, zLeft, xRight, zRight);
     drawHorizontalLine(xLeft, xRight, currentY, zSegment, color);
-    drawBufferizedPixel(xLeft, currentY, zLeft);
-    drawBufferizedPixel(xRight, currentY, zRight);
   }
 }
 
