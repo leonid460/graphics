@@ -16,6 +16,7 @@ export function drawLine(first: TPoint, second: TPoint, color?: string ) {
   if (x0 > x1) {
     [x0, x1] = [x1, x0];
     [y0, y1] = [y1, y0];
+    [z0, z1] = [z1, z0];
   }
 
   let dx = x1 - x0;
@@ -23,6 +24,8 @@ export function drawLine(first: TPoint, second: TPoint, color?: string ) {
   let dz = z1 - z0;
   let dError2 = Math.abs(dy) * 2;
   let error2 = 0;
+  let dError3 = Math.abs(dz) * 2;
+  let error3 = 0;
   let y = y0;
   let z = z0;
 

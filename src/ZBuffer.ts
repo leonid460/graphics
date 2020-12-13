@@ -1,11 +1,16 @@
 export class ZBuffer {
   data: number[][];
+  height: number;
+  width: number;
 
   constructor(width: number, height: number) {
     this.data = createEmptyMatrix(width, height);
+    this.height = height;
+    this.width = width;
 
     this.get = this.get.bind(this);
     this.set = this.set.bind(this);
+    this.clear = this.clear.bind(this);
   }
 
   get(x: number, y: number) {
@@ -19,6 +24,16 @@ export class ZBuffer {
     const roundedX = Math.floor(x);
     const roundedY = Math.floor(y);
     this.data[roundedY][roundedX] = value;
+  }
+
+  clear() {
+    // this.data = createEmptyMatrix(this.width, this.height);
+
+    this.data.forEach(row => {
+      row.forEach((_, index) => {
+        row[index] = -Infinity;
+      })
+    })
   }
 }
 

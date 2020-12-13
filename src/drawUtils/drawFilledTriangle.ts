@@ -1,39 +1,47 @@
-import { TPoint } from "../types";
+import { TPoint, TPolygon } from "../types";
 import { drawBufferizedPixel } from './drawPixel';
 import { globalState } from '../globalState';
 
-export function drawFilledTriangle(firstPoint: TPoint, secondPoint: TPoint, thirdPoint: TPoint, color?: string ) {
+export function drawFilledTriangle(firstPoint: TPoint, secondPoint: TPoint, thirdPoint: TPoint, color?: string) {
   let sortedPoints = sortTrianglePoints([firstPoint, secondPoint, thirdPoint]);
+  sortedPoints = sortedPoints.map(point => point.map(Math.floor)) as TPolygon;
 
-  const xBetweenFirstAndSecond = interpolateXForTwoPoints(sortedPoints[0],sortedPoints[1]);
-  const xBetweenSecondAndThird = interpolateXForTwoPoints(sortedPoints[1], sortedPoints[2]);
-  const xBetweenFirstAndThird = interpolateXForTwoPoints(sortedPoints[0], sortedPoints[2]);
+  // console.log({ sortedPoints });
+
+  const x01 = interpolateXForTwoPoints(sortedPoints[0],sortedPoints[1]);
+  const x12 = interpolateXForTwoPoints(sortedPoints[1], sortedPoints[2]);
+  const x02 = interpolateXForTwoPoints(sortedPoints[0], sortedPoints[2]);
   const z01 = interpolateZForTwoPoints(sortedPoints[0],sortedPoints[1]);
   const z12 = interpolateZForTwoPoints(sortedPoints[1],sortedPoints[2]);
   const z02 = interpolateZForTwoPoints(sortedPoints[0],sortedPoints[2]);
 
-  xBetweenFirstAndSecond.pop();
-  const x012 = [...xBetweenFirstAndSecond, ...xBetweenSecondAndThird];
+  x01.pop();
+  const x012 = [...x01, ...x12];
 
   z01.pop();
   const z012 = [...z01, ...z12 ];
 
-  const { zLists, xLists } = defineLeftAndRightLists([x012, xBetweenFirstAndThird], [z012, z02]);
-  const [leftXList, rightXList] = xLists;
-  const [leftZList, rightZList] = zLists;
+  const [leftXList, rightXList] = [x012, x02];
+  const [leftZList, rightZList] = [z012, z02];
 
-  for (let currentY = sortedPoints[0][1]; currentY <= sortedPoints[2][1]; currentY++) {
+  // debugger;
+  // O(n^2)
+  for (let currentY = sortedPoints[0][1]; currentY <= sortedPoints[2][1]; currentY += 1) {
     const yAndY0Distance = currentY - sortedPoints[0][1];
     const xLeft = leftXList[yAndY0Distance];
     const xRight = rightXList[yAndY0Distance];
     const zLeft = leftZList[yAndY0Distance];
     const zRight = rightZList[yAndY0Distance];
 
+    //debugger;
     const zSegment = interpolate(xLeft, zLeft, xRight, zRight);
+    // console.log({ xLeft, zLeft, xRight, zRight });
+    // console.log({ zSegment });
     drawHorizontalLine(xLeft, xRight, currentY, zSegment, color);
   }
 }
 
+// O(1)
 function sortTrianglePoints(points: [TPoint, TPoint, TPoint]): [TPoint, TPoint, TPoint] {
   let [resultPoint0, resultPoint1, resultPoint2] = points;
 
@@ -52,6 +60,7 @@ function sortTrianglePoints(points: [TPoint, TPoint, TPoint]): [TPoint, TPoint, 
   return [resultPoint0, resultPoint1, resultPoint2];
 }
 
+// лучший случай: O(1) | худший: O(n)
 function interpolateXForTwoPoints(firstPoint: TPoint, secondPoint: TPoint): number[] {
   const [x0, y0] = firstPoint;
   const [x1, y1] = secondPoint;
@@ -59,6 +68,7 @@ function interpolateXForTwoPoints(firstPoint: TPoint, secondPoint: TPoint): numb
   return interpolate(y0, x0, y1, x1);
 }
 
+// лучший случай: O(1) | худший: O(n)
 function interpolateZForTwoPoints(firstPoint: TPoint, secondPoint: TPoint): number[] {
   const [y0, z0] = firstPoint.slice(1);
   const [y1, z1] = secondPoint.slice(1);
@@ -66,6 +76,7 @@ function interpolateZForTwoPoints(firstPoint: TPoint, secondPoint: TPoint): numb
   return interpolate(y0, z0, y1, z1)
 }
 
+// O(1)
 function defineLeftAndRightLists(xLists: number[][], zLists: number[][]): { zLists: number[][], xLists: number[][] } {
   const [firstXList, secondXList] = xLists;
   const [firstZList, secondZList] = zLists;
@@ -85,6 +96,7 @@ function defineLeftAndRightLists(xLists: number[][], zLists: number[][]): { zLis
   }
 }
 
+// O(n)
 function drawHorizontalLine(fromX: number, toX: number, level: number, zSegment: number[], color?: string) {
   if (!globalState.zBuffer) {
     throw new Error('no z buffer was initialized');
@@ -94,17 +106,26 @@ function drawHorizontalLine(fromX: number, toX: number, level: number, zSegment:
 
   for (let x = leftX; x <= rightX; x++) {
     const z = zSegment[x - leftX];
+
     drawBufferizedPixel(x, level, z, color);
   }
 }
 
+// лучший случай: O(1) | худший: O(n)
 function interpolate (firstIndependent: number, firstDependent: number, secondIndependent: number, secondDependent: number): number[] {
   if (firstIndependent == secondIndependent) {
     return [firstDependent];
   }
 
   const values: number[] = [];
-  const a = (secondDependent - firstDependent) / (secondIndependent - firstIndependent)
+  let a = (secondDependent - firstDependent) / (secondIndependent - firstIndependent);
+
+  if (firstDependent > secondDependent) {
+    a = - Math.abs(a);
+  } else {
+    a = Math.abs(a);
+  }
+
   let currentDependent = firstDependent;
 
   const from = firstIndependent;
@@ -113,9 +134,9 @@ function interpolate (firstIndependent: number, firstDependent: number, secondIn
   const [left, right] = from < to ? [from, to] : [to, from];
 
   for (let i = left; i <= right; i++) {
-    values.push(currentDependent);
+    values.push(Math.floor(currentDependent));
     currentDependent += a;
   }
 
-  return values
+  return values;
 }

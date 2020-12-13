@@ -1,17 +1,17 @@
-import { TPoint } from "../types";
+import { TPoint, TPolygon } from "../types";
 import { multiplyMatrix } from '../utils/matrix';
 import { degreesToRadians } from '../utils/angles';
 
-export function rotatePolygonOverX(polygon: TPoint[], degreeAngle: number): TPoint[] {
-  return polygon.map(point => rotatePointOverX(point, degreeAngle));
+export function rotatePolygonOverX(polygon: TPolygon, degreeAngle: number): TPolygon {
+  return polygon.map(point => rotatePointOverX(point, degreeAngle)) as TPolygon;
 }
 
-export function rotatePolygonOverY(polygon: TPoint[], degreeAngle: number): TPoint[] {
-  return polygon.map(point => rotatePointOverY(point, degreeAngle));
+export function rotatePolygonOverY(polygon: TPolygon, degreeAngle: number): TPolygon {
+  return polygon.map(point => rotatePointOverY(point, degreeAngle)) as TPolygon;
 }
 
-export function rotatePolygonOverZ(polygon: TPoint[], degreeAngle: number): TPoint[] {
-  return polygon.map(point => rotatePointOverZ(point, degreeAngle));
+export function rotatePolygonOverZ(polygon: TPolygon, degreeAngle: number): TPolygon {
+  return polygon.map(point => rotatePointOverZ(point, degreeAngle)) as TPolygon;
 }
 
 const rotatePointOverX = rotatorFactory(makeRotationMatrixX)

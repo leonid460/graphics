@@ -1,6 +1,6 @@
 import { globalState, setGlobalHeight, setGlobalWidth } from './globalState';
 import './index.css';
-import { TPoint } from './types';
+import { TPoint, TPolygon } from './types';
 import { drawFilledTriangleWithStroke } from './drawUtils/drawFilledTriangleWithStroke';
 import { projectPoint } from "./projectPoint";
 import { ZBuffer } from './ZBuffer';
@@ -8,6 +8,7 @@ import { getPolygonsFromObj } from './getPolygonFromObj';
 import { model } from './model';
 import { rotatePolygonOverX, rotatePolygonOverY } from './actions/rotate';
 import { useControlPanel } from './ui/useControlPanel';
+import { clearScreen } from './drawUtils/clearScreen';
 
 function setUpCanvas(){
   const canvas = document.getElementById('scene') as HTMLCanvasElement;
@@ -41,77 +42,62 @@ function setUpCanvas(){
   onResize();
 }
 
-function renderLoop(renderFunction: () => void) {
-  renderFunction();
+async function renderLoop(renderFunction: () => void) {
+  clearScreen();
+  await renderFunction();
 
   window.requestAnimationFrame(() => renderLoop(renderFunction));
 }
 
-void function main() {
+void async function main() {
   setUpCanvas();
-  useControlPanel();
+
   const polygons = getPolygonsFromObj(model);
-  const adaptedPolygons = adaptPolygons(polygons)
+  let adaptedPolygons = adaptPolygons(polygons)
     .map(polygon => rotatePolygonOverY(polygon, 45))
     .map(polygon => rotatePolygonOverX(polygon, 45))
 
-  const testRawPolygon1 = [[-1, -1, 10], [1, 1, 10], [1, -1, 10]];
-  const testRawPolygon2 = [[-1, -1, 0], [-1, 1, 0], [1, -1, 0]];
+ // adaptedPolygons = [adaptedPolygons[1], adaptedPolygons[4]];
 
-  const [firstPolygon, secondPolygon] = adaptPolygons([testRawPolygon1, testRawPolygon2]);
-  const [a, b, c] = firstPolygon;
-  const [d, e, f] = secondPolygon;
+  const fillColors = ['green', 'blue', 'purple', 'yellow', 'red', 'brown', 'green', 'blue', 'purple', 'yellow', 'red', 'brown'];
 
-  const colorsParams1 = {
-    fill: 'red',
-    stroke: 'black'
+  const turnPolygonsY = (deg: number) => {
+    adaptedPolygons = adaptPolygons(adaptedPolygons).map(polygon => rotatePolygonOverY(polygon, deg));
   }
 
-  const colorsParams2 = {
-    fill: 'blue',
-    stroke: 'blue'
-  }
+  const handleTurnLeft = () => turnPolygonsY(-15);
+  const handleTurnRight = () => turnPolygonsY(15);
+  useControlPanel({
+    handleTurnRight,
+    handleTurnLeft
+  });
 
-  const renderPicture = () => {
-    const projectedA = projectPoint(a);
-    const projectedB = projectPoint(b);
-    const projectedC = projectPoint(c);
-
-    const projectedD = projectPoint(d);
-    const projectedE = projectPoint(e);
-    const projectedF = projectPoint(f);
-
-    drawFilledTriangleWithStroke([projectedA, projectedB, projectedC], colorsParams1);
-    drawFilledTriangleWithStroke([projectedD, projectedE, projectedF], colorsParams2);
-  }
-
-  const renderPolygons = () => {
-    const projectedPolygons = adaptedPolygons.map(polygon => {
-      const [a, b, c] = polygon;
-
-      const projectedA = projectPoint(a);
-      const projectedB = projectPoint(b);
-      const projectedC = projectPoint(c);
-
-      return [projectedA, projectedB, projectedC];
+  const renderPolygons = async () => {
+    const promises = adaptedPolygons.map((polygon, index) => {
+      return drawFilledTriangleWithStroke(projectPolygon(polygon), {
+        stroke: 'black',
+        fill: fillColors[index]
+      });
     });
 
-    projectedPolygons.forEach(polygon => {
-      const [a, b, c] = polygon;
-
-      drawFilledTriangleWithStroke([a, b, c], colorsParams1);
-    });
+    await Promise.all(promises);
   }
 
-  //renderPolygons();
-  //renderPicture();
-  renderLoop(renderPolygons);
+  //await renderPolygons();
+  await renderLoop(renderPolygons);
 }();
 
-function adaptPolygons(rawPolygons: number[][][]): TPoint[][] {
+function projectPolygon(polygon: TPolygon): TPolygon {
+  const [a, b, c] = polygon;
+
+  return [projectPoint(a), projectPoint(b), projectPoint(c)];
+}
+
+function adaptPolygons(rawPolygons: number[][][]): TPolygon[] {
   return rawPolygons.map(getPointsOfPolygon);
 }
 
-function getPointsOfPolygon(polygon: number[][]): TPoint[] {
-  return polygon.map(vertex => [vertex[0], vertex[1], vertex[2], 1]);
+function getPointsOfPolygon(polygon: number[][]): TPolygon {
+  return polygon.map(vertex => [vertex[0], vertex[1], vertex[2], 1]) as TPolygon;
 }
+

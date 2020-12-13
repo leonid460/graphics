@@ -7,7 +7,10 @@ type TColorsParams = {
   fill: string;
 }
 
-export function drawFilledTriangleWithStroke(points: [TPoint, TPoint, TPoint], colorsParams: TColorsParams ) {
-  drawTriangleStroke(...points, colorsParams.stroke);
-  drawFilledTriangle(...points, colorsParams.fill);
+export async function drawFilledTriangleWithStroke(points: [TPoint, TPoint, TPoint], colorsParams: TColorsParams): Promise<void> {
+  return new Promise(resolve => {
+    drawFilledTriangle(...points, colorsParams.fill);
+    //drawTriangleStroke(...points, colorsParams.stroke);
+    resolve();
+  })
 }

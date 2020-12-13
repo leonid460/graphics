@@ -1,10 +1,16 @@
 interface INestedElementParams {
   tagName: string;
   className?: string;
+  onClick?: () => void;
   children?: INestedElementParams[] | string;
 }
 
-export function useControlPanel() {
+interface IControlPanelProps {
+  handleTurnLeft: () => void;
+  handleTurnRight: () => void;
+}
+
+export function useControlPanel({handleTurnLeft, handleTurnRight}: IControlPanelProps) {
   const root = document.getElementById('root');
 
   if (!root) {
@@ -24,12 +30,14 @@ export function useControlPanel() {
           {
             tagName: 'button',
             className: 'control-panel__inner-buttons-panel__turn-button',
-            children: 'left'
+            children: 'left',
+            onClick: handleTurnLeft
           },
           {
             tagName: 'button',
             className: 'control-panel__inner-buttons-panel__turn-button',
-            children: 'right'
+            children: 'right',
+            onClick: handleTurnRight
           }
         ]
       }]
@@ -49,6 +57,7 @@ function createNestedElements(elementParams: INestedElementParams) {
     } else {
       children.forEach(nestedParams => {
         const nestedElement = createNestedElements(nestedParams);
+        nestedElement.onclick = nestedParams.onClick || null;
         element.append(nestedElement);
       })
     }
