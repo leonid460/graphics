@@ -2,7 +2,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { SourceMapDevToolPlugin } = require('webpack');
 
-const isDev = process.env.NODE_ENV === 'production';
+const isDev = process.env.NODE_ENV === 'development';
+console.log({ isDev });
 console.log(isDev ? 'DEV MODE' : 'PROD MODE');
 
 function jsLoaders() {
@@ -40,10 +41,11 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.(png|jpe?g|gif)$/i,
+        test: /\.(png|jpe?g|gif|svg)$/i,
         use: [
           {
             loader: 'file-loader',
+            options: {},
           },
         ],
       },

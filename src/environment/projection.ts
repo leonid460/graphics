@@ -4,6 +4,7 @@ import { globalState } from './globalState';
 
 export function projectPoint(point: TPoint): TPoint {
   const projection = multiplyMatrix(globalState.projectionMatrix, transformRowToColumn(point));
+  debugger;
 
   return transformColumnToRow(projection) as TPoint
 }

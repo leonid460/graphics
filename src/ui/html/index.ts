@@ -17,6 +17,7 @@ export function createNestedElements(elementParams: INestedElementParams) {
       children.forEach(nestedParams => {
         const nestedElement = createNestedElements(nestedParams);
         nestedElement.onclick = nestedParams.onClick || null;
+        nestedElement.onchange = (nestedParams.onChange as (el: Event) => void) || null;
         element.append(nestedElement);
       })
     }

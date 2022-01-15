@@ -1,4 +1,4 @@
-import { TPolygon } from "../types";
+import { TPolygon } from "../../types";
 
 export function adaptRawPolygons(rawPolygons: number[][][]): TPolygon[] {
   return rawPolygons.map(getPointsOfPolygon);

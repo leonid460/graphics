@@ -14,9 +14,9 @@ export const globalState: IGlobalState = {
   width: 0,
   height: 0,
   projectionMatrix: [
-    [100, 0, 0, 0],
-    [0, -100, 0, 100],
-    [0, 0, 100, 0],
+    [10, 0, 0, 0],
+    [0, -10, 0, 0],
+    [0, 0, 10, 0],
     [0 ,0 ,0, 1]
   ]
 };
