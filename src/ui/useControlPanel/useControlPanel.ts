@@ -10,7 +10,6 @@ import {
 } from './types';
 // @ts-ignore
 import rotateZArrow from './rotate-icon.svg';
-import {TInputEvent} from "../html/types";
 
 export function useControlPanel({
   handleTurnLeft, handleTurnRight, handleTurnDown, handleTurnUp, toggleAutoMode,
@@ -35,9 +34,6 @@ export function useControlPanel({
         className: 'title',
         children: 'rotation'
       },
-      rotationInput('X', (event) => { console.log(event.target.value )}),
-      rotationInput('Y', (event) => { console.log(event.target.value )}),
-      rotationInput('Z', (event) => { console.log(event.target.value )}),
       getRotateOverZButtons({ handleTurnClock, handleTurnReverseClock }),
       getRotationButtonsPanel({
         handleTurnLeft,
@@ -278,25 +274,4 @@ function getBorder() {
     tagName: 'div',
     className: 'border',
   };
-}
-
-function rotationInput(label: string, handle: (event: TInputEvent) => void) {
-  return {
-    tagName: 'label',
-    className: 'control-panel__input-container',
-    children: [
-      {
-        tagName: 'span',
-        children: label
-      },
-      {
-        tagName: 'input',
-        props: [
-          { name: 'type', value: 'number'}
-        ],
-        className: 'control-panel__input',
-        onChange: handle
-      }
-    ]
-  }
 }

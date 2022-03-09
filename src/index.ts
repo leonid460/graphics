@@ -8,7 +8,7 @@ import { drawFilledTriangleWithStroke } from './drawUtils/drawFilledTriangleWith
 import {rotatePolygonOverX, rotatePolygonOverY, rotatePolygonOverZ} from './actions/rotate';
 import { mirrorPolygonOverX, mirrorPolygonOverY, mirrorPolygonOverZ } from './actions/mirror';
 import { stretchPolygonOverX, stretchPolygonOverY, stretchPolygonOverZ} from './actions/stretch';
-import { movePolygonX, movePolygonY, movePolygonZ } from './actions/move';
+import { movePolygonX, movePolygonY } from './actions/move';
 import { useControlPanel } from './ui/useControlPanel/useControlPanel';
 import { loadModel } from './model/blender/loadModel';
 
@@ -21,12 +21,10 @@ async function renderLoop(renderFunction: () => void) {
 
 void async function main() {
   setUpEnvironment();
-  const model = loadModel(1);
+  const model = loadModel(5);
   const polygons = getPolygonsFromObj(model);
 
   let adaptedPolygons = adaptRawPolygons(polygons);
-
-  const fillColors = ['green', 'blue', 'purple', 'yellow', 'red', 'brown', 'green', 'blue', 'purple', 'yellow', 'red', 'brown'];
 
   const turnPolygonsY = (deg: number) => {
     adaptedPolygons = adaptedPolygons.map(polygon => rotatePolygonOverY(polygon, deg));
@@ -130,7 +128,7 @@ void async function main() {
       turnPolygonsX(2);
     }
 
-    const promises = adaptedPolygons.map((polygon, index) => {
+    const promises = adaptedPolygons.map((polygon) => {
       const projectedPolygon = projectPolygon(polygon);
 
       return drawFilledTriangleWithStroke(projectedPolygon, {
